@@ -1,7 +1,7 @@
 <!-- File: /app/Controller/JobsController.php -->
 
 <?php
-// hello
+
 class JobsController extends AppController {
 	public $helpers = array('Html', 'Form', 'Flash');
 
