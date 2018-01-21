@@ -1,26 +1,24 @@
 <!-- File: /app/Controller/JobsController.php -->
 
-<?php 
-
 class JobsController extends AppController {
 	public $helpers = array('Html', 'Form', 'Flash');
-	
+
 	public function index() {
 		$this->set('jobs', $this->Job->find('all'));
 	}
-	
+
 	public function view($id = null) {
 		if (!$id) {
 			throw new NotFoundException(__('Ungültiger Job'));
 		}
-		
+
 		$job = $this->Job->findById($id);
 		if (!$job) {
 			throw new NotFoundException(__('Ungültiger Job'));
 		}
 		$this->set('job', $job);
 	}
-	
+
 	public function add() {
 		// if the HTTP method of the request was POST, it saves the data using the Job model
 		if ($this->request->is('post')) {
@@ -32,7 +30,7 @@ class JobsController extends AppController {
 			$this->Flash->error(__('Der Job konnte nicht gespeichert werden.'));
 		}
 	}
-	
+
 	public function edit($id = null) {
 		if (!$id) {
 			throw new NotFoundException(__('Ungültiger Job'));
@@ -56,7 +54,7 @@ class JobsController extends AppController {
 			$this->request->data = $job;
 		}
 	}
-	
+
 	public function delete($id) {
 		if ($this->request->is('get')) {
 			throw new MethodNotAllowedException();
