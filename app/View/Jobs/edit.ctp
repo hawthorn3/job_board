@@ -1,6 +1,20 @@
 <!-- File: /app/View/Jobs/edit.ctp -->
 
-<div class="container">	
+<div class="container">
+
+	<?php
+	if ($this->request->query('token') != '') {
+		$token = '?token='.$this->request->query('token');
+	} else {
+		$token='';
+	}
+	echo $this->Html->link(
+	    '<i class="fa fa-arrow-circle-left mr-1" aria-hidden="true"></i> Zurück zur Jobansicht',
+	    array('controller' => 'jobs',
+						'action' => 'view/'.$id.$token),
+			array('escape' => false, 'class' => 'btn btn-info mb-2', 'style' => 'color: #fff;')
+	); ?>
+
 	<fieldset>
 	<legend><?php echo __('Job bearbeiten'); ?></legend>
 	<?php

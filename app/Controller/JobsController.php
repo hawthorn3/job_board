@@ -20,10 +20,12 @@ class JobsController extends AppController {
 		}
 		$this->set('job', $job);
 	}
-/*	
+/*
 	public function send_mail() {
         $message = 'Hallo,/n Ihre Anzeige kann unter den folgenden Link bearbeitet werden: ';
-		$link = $this->request->host() . $this->webroot .'jobs/view/'. $this->request->data['Job']['id'] .'?token='. $this->request->data['Job']['token'];
+				$link = $this->request->host() . $this->webroot .'jobs/view/'.
+						$this->request->data['Job']['id'] .'?token='.
+						$this->request->data['Job']['token'];
         App::uses('CakeEmail', 'Network/Email');
         $Email = new CakeEmail('gmail');
         $Email->from('jobs@job-board.com');
@@ -39,14 +41,17 @@ class JobsController extends AppController {
 			$this->Job->create();
 			if ($this->Job->save($this->request->data)) {
 				$this->Flash->success(__('Der Job wurde erfolgreich angelegt.'));
-		//		$this->send_mail();
+			// $this->send_mail();
 				$job = $this->Job->findById($this->Job->getInsertId());
-				$this->Session->setFlash('Mail sent '.$this->request->host() . $this->webroot .'jobs/view/'. $job['Job']['id'] .'?token='. $job['Job']['token'],'default',array('class'=>'alert alert-success'));
+				// E-Mail contents
+				$this->Session->setFlash('Sie können Ihre Jobanzeige unter den folgenden
+						Link bearbeiten oder löschen: '.$this->request->host() .
+						$this->webroot .'jobs/view/'. $job['Job']['id'] .'?token='.
+						$job['Job']['token'],'default',array('class'=>'alert alert-success'));
 				return $this->redirect(array('action' => 'index'));
 			}
 			$this->Flash->error(__('Der Job konnte nicht gespeichert werden.'));
 		}
-		$this->Session->setFlash('Mail sent '.$this->request->data['Job']['token'],'default',array('class'=>'alert alert-success'));
 	}
 
 	public function edit($id = null) {
@@ -59,13 +64,19 @@ class JobsController extends AppController {
 			throw new NotFoundException(__('Ungültiger Job'));
 		}
 
+		$this->set('id', $id);
 		if ($this->request->is(array('post', 'put'))) {
 			$this->Job->id = $id;
-			if ($this->Job->save($this->request->data)) {
-				$this->Flash->success(__('Der Eintrag wurde aktualisiert.'));
-				return $this->redirect(array('action' => 'index'));
+			// edit is permitted only if token is correct
+			if ($job['Job']['token'] == $this->request->query('token')) {
+				if ($this->Job->save($this->request->data)) {
+					$this->Flash->success(__('Der Eintrag wurde aktualisiert.'));
+					return $this->redirect(array('action' => 'index'));
+				}
+				$this->Flash->error(__('Der Eintrag konnte nicht aktualisiert werden.'));
+			} else {
+				$this->Flash->error(__('Zugriff verweigert.'));
 			}
-			$this->Flash->error(__('Der Eintrag konnte nicht aktualisiert werden.'));
 		}
 
 		if (!$this->request->data) {
@@ -78,18 +89,24 @@ class JobsController extends AppController {
 			throw new MethodNotAllowedException();
 		}
 
-		if ($this->Job->delete($id)) {
-			$this->Flash->success(
-				__('Der Job mit ID: %s wurde gelöscht.', h($id))
-			);
+		$job = $this->Job->findById($id);
+		// delete is permitted only if token is corrent
+		if ($job['Job']['token'] == $this->request->query('token')) {
+			if ($this->Job->delete($id)) {
+				$this->Flash->success(
+					__('Der Job mit ID: %s wurde gelöscht.', h($id))
+				);
+			} else {
+				$this->Flash->error(
+					__('Der Job mit ID: %s konnte nicht gelöscht werden.', h($id))
+				);
+			}
 		} else {
-			$this->Flash->error(
-				__('Der Job mit ID: %s konnte nicht gelöscht werden.', h($id))
-			);
+				$this->Flash->error(__('Zugriff verweigert.'));
 		}
 
 		return $this->redirect(array('action' => 'index'));
 	}
-	
+
 
 }
