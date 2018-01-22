@@ -29,6 +29,14 @@ class Job extends AppModel {
 			'rule' => 'notBlank',	
 			'allowEmpty' => true,
 			'required' => true
-        )		
+        ),
+		'token' => array(
+            'required' => true
+		)
     );
+	
+	public function beforeSave($options = array()) {
+        $this->data['Job']['token'] = CakeText::uuid();
+		return $this->data;
+	}
 }
