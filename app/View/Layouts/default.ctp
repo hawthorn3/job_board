@@ -20,13 +20,13 @@ $cakeVersion = __d('cake_dev', 'CakePHP %s', Configure::version())
 <!DOCTYPE html>
 <html>
 <head>
-	<?php echo $this->Html->charset(); 
+	<?php echo $this->Html->charset();
 	echo $this->Html->charset();
     echo $this->Html->css('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css');
     echo $this->Html->script('https://code.jquery.com/jquery-3.2.1.slim.min.js');
     echo $this->Html->script('https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js');
 	    echo $this->Html->script('https://use.fontawesome.com/14fae464fb.js');?>
-	
+
 	<title>Jobbörse</title>
 	<?php
 		echo $this->Html->meta('icon');

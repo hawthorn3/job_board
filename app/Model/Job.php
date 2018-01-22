@@ -13,7 +13,7 @@ class Job extends AppModel {
             'required' => true
         ),
 		'website' => array(
-			'rule' => 'notBlank',	
+			'rule' => 'notBlank',
 			'allowEmpty' => true,
 			'required' => true
         ),
@@ -26,7 +26,7 @@ class Job extends AppModel {
             'required' => true
         ),
         'contact_mobile' => array(
-			'rule' => 'notBlank',	
+			'rule' => 'notBlank',
 			'allowEmpty' => true,
 			'required' => true
         ),
@@ -34,9 +34,12 @@ class Job extends AppModel {
             'required' => true
 		)
     );
-	
+
 	public function beforeSave($options = array()) {
+		// create token only when adding new entry
+		if (!$this->id && !isset(($this->data['Job']['token']))) {
         $this->data['Job']['token'] = CakeText::uuid();
+		}
 		return $this->data;
 	}
 }
